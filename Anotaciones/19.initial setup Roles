@@ -1,0 +1,45 @@
+**** Initial setup *****
+
+Vamos a crear en libs un InitialSetup para que apenas iniciae la app 
+cree roles por default para que el user pueda utilizarlos. 
+
+  libs/initialSetup.js 
+
+  import Role from "../models/Role"
+
+export const createRoles = async () => {
+  try {
+      // devuelve la cantidad de documentos existentes del
+      const count = await Role.estimatedDocumentCount();
+
+      //Si existen roles corta el proceso
+      if (count > 0) return;
+
+      // Generamos una promesa multiple para ganar rendimiento
+      const values = await Promise.all([
+        new Role({ name: "user" }).save(),
+        new Role({ name: "moderator" }).save(),
+        new Role({ name: "admin" }).save(),
+      ]);
+
+      console.log(values);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+Para que nuestra fn haga efecto la importamos en el app.js y la ejecutamos 
+
+  import { createRoles } from "../libs/initialSetup";
+
+  const app = express(); //creación del server
+  createRoles();         //creacion inicial de roles
+
+Al guardar los cambios se generan los roles en la BD 
+  Server corriendo correctamente!!!
+  >>>> Database is connected!
+  [
+    { _id: 605e63859719620de55ad2bd, name: 'user' },
+    { _id: 605e63859719620de55ad2be, name: 'moderator' },
+    { _id: 605e63859719620de55ad2bf, name: 'admin' }
+  ]

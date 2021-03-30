@@ -1,0 +1,27 @@
+****** Asignación de rol por defecto al user que se registra ******
+
+ Para el registro vamos a hacer una comprobación de los roles que nos envia,
+ para eso vamos comprobar que el rol exista y asignamos el _id del rol exitente: 
+
+  en auth.controller.js vamos a crearla 
+    .....   // creo una instancia de User
+            let user = new User({
+              username,
+              email,
+              password: await User.encryptPassword(password),
+            });
+    ..... 
+        //find devuelve un array, findOne devuelve un objeto
+        //comprobacion de roles
+        if (roles) {
+          const foundRoles = await Role.findOne({ name: { $in: roles } });
+          user.roles = foundRoles.map((role) => role._id);
+        } else {
+          const role = await Role.findOne({ name: "user" });
+          user.roles = [role._id];
+        }
+
+        const savedUser = await user.save(); //lo guardamos en la BD
+        console.log(savedUser);
+
+Con esto ya estamos asignando los roles al user. Borramos el log

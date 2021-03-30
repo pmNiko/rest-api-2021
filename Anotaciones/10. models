@@ -1,0 +1,35 @@
+********** Models ***********
+
+Vamos a crear los modelos de datos en models/
+
+  Product.js     User.js     Role.js
+
+En Product.js 
+  import { Schema, model } from "mongoose";
+
+  const productSchema = new Schema(
+    {
+      name: String,
+      category: String,
+      price: Number,
+      imgURL: String,
+    },
+    {
+      // creación y actualizacion del obj
+      timestamps: true,
+      // evita el __uv
+      versionKey: false,
+    }
+  );
+
+  export default model("Product", productSchema);
+
+  Ahora lo importamos en su controller para utilizarlo
+
+    import Product from "../models/Product";
+
+  Antes vamos a probar el method POST con postman
+    
+    export const createProduct = async (req, res) => {
+      res.json("Creating product");
+    };

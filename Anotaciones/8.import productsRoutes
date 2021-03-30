@@ -1,0 +1,25 @@
+********** Usando el controller de Productos ********
+
+  import { Router } from "express";
+  import * as productsCtrl from "../controllers/products.controller";
+
+  const router = Router();
+
+  router.get("/", productsCtrl.getProducts);
+
+Ahora vamos a crear el resto de los endpoints
+
+  // End Point para crear
+  router.post("/", productsCtrl.createProduct);
+
+  // End Point para obtener todos
+  router.get("/", productsCtrl.getProducts);
+
+  // End Point para obtener un producto por ID
+  router.get("/:id", productsCtrl.getProductById);
+
+  // End Point para actualizar por ID
+  router.put("/:id", productsCtrl.updateProductById);
+
+  // End Point para eliminar por ID
+  router.delete("/:id", productsCtrl.deleteProductById);

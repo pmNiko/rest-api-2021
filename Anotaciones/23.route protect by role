@@ -1,0 +1,82 @@
+******* Verificación de roles *****
+
+Creamos dos middlewares: 
+  authorization.js 
+    isAdmin - isModerator para esto cambiamos el index y la importación 
+    en la ruta de productos
+
+    index.js 
+      import { verifyToken, isAdmin, isModerator } from "./authorization";
+
+      export { verifyToken, isAdmin, isModerator };
+
+    products.routes.js 
+      // End Point para crear
+      router.post("/", [verifyToken, isModerator], productsCtrl.createProduct);
+  
+  middlewares/authorization.js
+
+    // Verifica que sea un Moderator
+    export const isModerator = async (req, res, next) => {
+      // accedemos a la prop del req que seteamos en verifyToken
+      const user = await User.findById(req.userId);
+
+      // verificamos los roles del user por id de rol
+      const roles = await Role.find({ _id: { $in: user.roles } });
+
+      //buscamos que tenga el rol moderator
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name === "moderator") {
+          next();
+          return;
+        }
+      }
+
+      res.status(403).json({ message: "Require moderator role" });
+    };
+
+    // Verifica que sea un Admin
+    export const isAdmin = async (req, res, next) => {
+      // accedemos a la prop del req que seteamos en verifyToken
+      const user = await User.findById(req.userId);
+
+      // verificamos los roles del user por id de rol
+      const roles = await Role.find({ _id: { $in: user.roles } });
+
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name === "admin") {
+          next();
+          return;
+        }
+      }
+
+      res.status(403).json({ message: "Require admin role" });
+    };
+
+    Podemos refactorizar 
+
+    // Verifica que sea un Moderator
+    export const isModerator = async (req, res, next) =>
+      verifyRole("moderator", req, res, next);
+
+    // Verifica que sea un Admin
+    export const isAdmin = async (req, res, next) =>
+      verifyRole("admin", req, res, next);
+
+    // Recibe un rol como string y lo compara con los roles del user
+    async function verifyRole(role, req, res, next) {
+      // accedemos a la prop del req que seteamos en verifyToken
+      const user = await User.findById(req.userId);
+
+      // verificamos los roles del user por id de rol
+      const roles = await Role.find({ _id: { $in: user.roles } });
+
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name === role) {
+          next();
+          return;
+        }
+      }
+
+      res.status(403).json({ message: `Require admin role ${role}` });
+    }

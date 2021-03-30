@@ -1,0 +1,86 @@
+****** Función de login ****** 
+
+El usuario nos va estar mandando email y password, vamos a comenzar haciendo ana busqueda 
+por email en nuestra bd. 
+
+  // fn para login de user
+  export const singin = async (req, res) => {
+    // busqueda del user por email
+    const userFound = await User.findOne({ email: req.body.email });
+
+    // si el email no existe devolvemos un 404
+    if (!userFound) return res.status(404).json({ message: "User not found" });
+
+    console.log(userFound);
+
+    res.json("");
+  };
+
+POSTMAN 
+  Headers Content-Type application/json
+  Body:  raw
+      {
+          "email": "nikol@gmail.com",   //incorrecto
+          "password": "admin111",       //incorrecto
+      }
+
+      {
+          "message": "User not found"
+      }
+Por consola recibimos un 404, de lo contrario si colocamos bien el email recibiremos un 200.
+
+Consola: 
+  Server corriendo correctamente!!!
+  >>>> Database is connected!
+  {
+    roles: [ 605e63859719620de55ad2bd ],     <<<<<< Rol del user
+    _id: 605e6dfd4ad9660fdbc30ec5,
+    username: 'niko',
+    email: 'niko@gmail.com',
+    password: '$2a$10$WWxWfTeG2JCiWJafWSz9luUjw77QKZNS2FGjAjoJSsagfa.5NTwLm',
+    createdAt: 2021-03-26T23:27:57.939Z,
+    updatedAt: 2021-03-26T23:27:57.939Z
+  }
+  POST /api/auth/signin 200 16.576 ms - 2
+
+Ahora para poder ver los datos del rol del user lo que vamos a hacer es poblar la 
+propiedad roles del objeto user, para esto utilizamos la fn populate()
+
+  ...... 
+    // busqueda del user por email
+    const userFound = await User.findOne({ email: req.body.email }).populate(
+      "roles"
+    );
+
+Si hacemos la petición nuevamente obtenemos por consola: 
+  Server corriendo correctamente!!!
+  >>>> Database is connected!
+  {
+    roles: [ { _id: 605e63859719620de55ad2bd, name: 'user' } ],
+    _id: 605e6dfd4ad9660fdbc30ec5,
+    username: 'niko',
+    email: 'niko@gmail.com',
+    password: '$2a$10$WWxWfTeG2JCiWJafWSz9luUjw77QKZNS2FGjAjoJSsagfa.5NTwLm',
+    createdAt: 2021-03-26T23:27:57.939Z,
+    updatedAt: 2021-03-26T23:27:57.939Z
+  }
+  POST /api/auth/signin 200 67.539 ms - 2
+
+Bien ahora nos queda validar la contraseña del user, para eso vamos a crear una validación:
+
+  .....   // si el email no existe devolvemos un 404
+          if (!userFound) return res.status(404).json({ message: "User not found" });
+  ....
+    // validacion de password 
+    const matchPassword = await User.comparePassword(req.body.password, userFound.password);
+    
+    if(!matchPassword) return res.status(401).json({token: null, message: 'Invalid password'});
+
+    // creación del token
+    const token = jwt.sign({ id: userFound._id }, config.SECRET, {
+      expiresIn: 86400,
+    });
+
+    res.json({ token });
+
+  Con esto ya tenemos la forma de registrar y loguear un user.

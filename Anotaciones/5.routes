@@ -1,0 +1,14 @@
+******** Rutas ********* 
+
+Vamos a crear las routes del projecto 
+  auth.routes.js       //para la authenticación
+  users.routes.js      //ABM users
+  product.routes.js    //ABM products
+
+Los cuales tendran la misma configuración inicial con el enrutador de express
+
+  import {Router} from "express";
+
+  const router = Router();
+
+  export default router;

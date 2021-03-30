@@ -1,0 +1,37 @@
+********** Controller de authentication *******
+
+  Vamos a recuperar los datos que nos envia el user
+    // fn para dar de alta un usuario
+    export const singup = async (req, res) => {
+      const { username, email, password, roles } = req.body;
+
+      console.log(req.body);
+      res.json("singUp");
+    };
+  
+En POSTMAN POST http://localhost:4000/api/auth/signup
+  En Headers 
+  key: Content-Type      value: application/json
+
+  En body: 
+    {
+        "username": "niko",
+        "email": "niko@gmail.com",
+        "password": "password",
+        "roles": ["admin", "moderator"]
+    }
+
+Por consola veremos:
+  {
+    username: 'niko',
+    email: 'niko@gmail.com',
+    password: 'password',
+    roles: [ 'admin', 'moderator' ]
+  }
+  POST /api/auth/signup 200 5.015 ms - 8
+
+Bien ya estamos recibiendo los parametros en el server, 
+Ahora vamos a crear los usuarios en base a esos params que 
+nos llegan. Para esto vamos a hacer uso de bcrypt tanto para 
+encriptar como para verificar el password, pero esto lo haremos en 
+el propio modelo de User. 

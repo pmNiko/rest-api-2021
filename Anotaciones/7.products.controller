@@ -1,0 +1,23 @@
+******** Products Controller ******
+
+  En la carpeta constroller/ creamos el archivo 
+    products.controller.js 
+
+  Y detro vamos a dejar definida las acciones de controlador asincronas
+
+  // fn para crear producto
+  export const createProduct = async (req, res) => {};
+
+  // fn para obtener los productos
+  export const getProducts = async (req, res) => {
+    res.json("Welcome products json");
+  };
+
+  // fn para obtener producto por ID
+  export const getProductById = async (req, res) => {};
+
+  // fn para actualizar producto por ID
+  export const updateProductById = async (req, res) => {};
+
+  // fn para eliminar producto por ID
+  export const deleteProductById = async (req, res) => {};

@@ -1,0 +1,36 @@
+********* Autenticación **********
+
+En el archivo auth.controller.js 
+  import User from "../models/User";
+
+  export const singup = async (req, res) => {
+    res.json("singUp");
+  };
+  export const singin = async (req, res) => {
+    res.json("singIn");
+  };
+
+
+Ahora podemos importarlas en el routes de auth
+
+  import { Router } from "express";
+  import * as authCtrl from "../controllers/auth.controller";
+
+  const router = Router();
+
+  router.post("/signup", authCtrl.singup);
+  router.post("/signin", authCtrl.singin);
+
+  export default router;
+
+Ahora ya podemos importarlas al app.js para ser consumidas.
+  import authRoutes from "../routes/auth.routes";
+
+Y antes de utilizarla vamos a usar la convención de la URL 
+anteponiendo /api a cada ruta para consumirlas. 
+  // Middleware para setear la url del end point
+  app.use("/api/products", productsRoutes);
+  app.use("/api/auth", authRoutes);
+
+Una vez que comprobamos la funcionalidad de nuestros end points 
+vamos a programar el auth.controller.js

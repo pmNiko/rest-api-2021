@@ -1,0 +1,49 @@
+******** Postman *********
+
+En postman vamos hacer el request petición tipo POST 
+  http://localhost:4000/products
+
+En Headers 
+  key: Content-Type      value: application/json
+
+En Body tipo raw
+  {
+    "name": "Laptop MSI",
+    "price": 700.90,
+    "category": "Laptops",
+    "imgURL": "https://images-na.ssl-images-amazon.com/images/I/81mIXd99GrL._AC_SL1500_.jpg"
+  }
+
+En el controller de Products vamos hacer un log de los datos: 
+  // fn para crear producto
+  export const createProduct = async (req, res) => {
+    console.log(req.body);
+    res.json("Creating product");
+  };
+
+Para que nos reciba estos datos debemos especificar en el app.js
+
+  const app = express(); //creación del server
+
+  app.use(express.json()); //admite los objetos json que recibe
+
+Ahora podemos enviar la petición y verla por consola.
+----........------
+Bien pero debemos guardarlo en la BD para esto en el controller
+
+  // fn para crear producto
+  export const createProduct = async (req, res) => {
+    const { name, category, price, imgURL } = req.body;
+
+    const product = new Product({ name, category, price, imgURL });
+
+    const productSave = await product.save();
+
+    // code 201 nuevo recurso creado
+    res.status(201).json(productSave);
+  };
+
+  En la consola veriamos: 
+    Server corriendo correctamente!!!
+    >>>> Database is connected!
+    POST /products 201 106.820 ms - 255

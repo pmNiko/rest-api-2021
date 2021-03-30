@@ -1,0 +1,35 @@
+******** Ruta de prueba y visualización por consola *******
+
+En app.js vamos a importar morgan en modo dev para ver 
+las peticiones por consola.
+
+  import morgan from "morgan";
+
+  const app = express(); //creación del server
+
+  app.use(morgan("dev")); //middleware propio de express
+
+Con esto ya tenemos el log por la consola del server, si en el navegador 
+vamos a http://localhost:3002/ por la consola veremos:
+  Server corriendo correctamente!!!
+  GET / 404 2.708 ms - 139
+
+  //responde 404 porque no existe ninguna ruta
+
+Crearemos una ruta de prueba con los datos de la API. En app.js
+  import pkg from "../../package.json"; 
+
+  // seteamos un par clave valor en express
+  app.set("pkg", pkg);
+
+  app.get("/", (req, res) => {
+    // destruct de las props que nos interesan de pkg
+    let { name, author, description, version } = app.get("pkg");
+    res.json({
+      name,
+      author,
+      description,
+      version,
+    });
+  });
+

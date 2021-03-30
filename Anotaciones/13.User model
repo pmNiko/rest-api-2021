@@ -1,0 +1,36 @@
+******** Modelo de User ******
+
+import { Schema, model } from "mongoose";
+
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      unique: true,
+    },
+    email: {
+      type: String,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    roles: [
+      {
+        // de esta manera relacionamos el Schema de Role al User
+        ref: "Role",
+        type: Schema.Types.ObjectId,
+      },
+    ],
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
+export default model("User", userSchema);
+
+Este modelo va estar relacionado con el modelo de Roles. 
+Vamos a comenzar a definirlo. 

@@ -1,0 +1,36 @@
+****** Registro de User en auth.controller ****
+
+  Aca vamos a dejar la validación de user existente para otra funcion.
+
+ Recuperamos el user guardado para generar el token y devolverlo al frontend.
+ Para esto vamos a importar el jswebtoken 
+
+  import jwt from "jswebtoken"
+
+ De este vamos a utilizar el metodo sing() el cual permite crear un token a partir 
+ de tres parametros: 
+      El dato a guardar dentro del token: _id del user a partid de Mongo.
+
+      Una palabra secreta: en el archivo server/config.js 
+              export default {
+                SECRET: "product-api",
+              };
+      La cual vamos a importar para poder utilizar. 
+        import config from "../server/config";
+
+      Por ultimo un objeto de configuración: 
+        expiresIn: 86400 //24hs
+
+  const savedUser = await user.save(); //lo guardamos en la BD
+
+  // creación del token
+  const token = jwt.sign({id: savedUser._id}, config.SECRET, {expiresIn: 86400});
+
+  Con esto ya tendriamos el token del usuario para que pueda hacer peticiones autenticadas.
+
+   res.status(200).json({ token });
+
+  POSTMAN 
+    Volvemos a realizar la peticion singup y nos devolvera el token del user. 
+
+

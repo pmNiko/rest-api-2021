@@ -1,0 +1,35 @@
+******** Rutas de Products *******
+
+ En products.routes.js vamos a crear una ruta de prueba
+
+ router.get("/products", (req, res) => {
+    res.json("Welcome products");
+  });
+
+Ahora en app.js importamos las rutas de products 
+
+  import productsRoutes from "../routes/products.routes";
+
+y le indicamos a app que las utilice
+
+  app.use(productsRoutes);
+
+en el navegador http://localhost:3002/products 
+y nos repondera con el mensaje que hemos asignado. 
+Por consola: 
+  Server corriendo correctamente!!!
+  GET /products 200 2.760 ms - 18
+
+Vamos a refactorizar nuestro codigo 
+  En products.routes.js
+  router.get("/", (req, res) => {
+    res.json("Welcome products");
+  });
+
+  Y en app.js
+  app.use("/products", productsRoutes);
+
+
+Mensaje por consola: GET /products 304 2.602 ms - -
+recibimos 304 porque es una redirección implícita 
+a un elemento/recurso de caché.

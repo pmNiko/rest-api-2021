@@ -1,0 +1,63 @@
+********* Modelo de User *********
+
+Importamos bcrypt 
+  import bcrypt from "bcryptjs";
+
+Ahora vamos a crear un metodo estatico estos se pueden utilizar 
+sin necesidad de tener que instanciarlos. 
+
+// cifrado de password
+userSchema.statics.encryptPassword = async (password) => {
+  // genSalt() es un algoritmo aplicado la cantidad de veces definida
+  const salt = await bcrypt.genSalt(10);
+  // cifra el password a partir de la contraseña del user y el salt
+  return await bcrypt.hash(password, salt);
+};
+
+// verificacón de contraseñas
+userSchema.statics.comparePassword = async (password, receivedPassword) => {
+  // retorna true si las contraseñas coinciden
+  return await bcrypt.compare(password, receivedPassword);
+};
+
+export default model("User", userSchema);
+
+Ahora podemos usar estos metodos en el auth.controller para crear 
+una instancia de user con el password cifrado
+  // creo una instancia de User
+  let user = new User({
+    username,
+    email,
+    password: await User.encryptPassword(password),
+  });
+
+  console.log(user);
+
+POSTMAN 
+  Headers Content-Type application/json
+  Body:  raw
+      {
+          "username": "niko",
+          "email": "niko@gmail.com",
+          "password": "admin",
+          "roles": ["admin", "moderator"]
+      }
+
+Por consola: 
+  Server corriendo correctamente!!!
+  >>>> Database is connected!
+  {
+    roles: [],
+    _id: 605e58eceedcfb0ae8abc960,
+    username: 'niko',
+    email: 'niko@gmail.com',
+    password: '$2a$10$NvPmD/D9UyiS60X20ZOSauP8uzJw5vv5k4PzyghASIMP/zr1Xf0bS'
+  }
+
+  Con esto ya estariamos en marcha para registrar un usuario. 
+  Luego vamos a devolver al front un token, esto sera lo que haremos
+  a continuación. Luego de ver el resultado por consola borramos el log 
+  y lo guardamos en la BD 
+  
+    await user.save()
+

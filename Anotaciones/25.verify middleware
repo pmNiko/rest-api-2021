@@ -1,0 +1,74 @@
+********** Verify roles ********
+
+Verificamos si al crear un usuario los roles que nos envia el admin existe 
+
+  middleware/verify.js 
+
+    //esta la creamos en el modelo role.js
+    import { ROLES } from "../models/Role";
+
+    export const checkRoles = (req, res, next) => {
+      const roles = req.body.roles;
+      if (roles) {
+        for (let i = 0; i < roles.length; i++) {
+          if (!ROLES.includes(roles[i])) {
+            return res
+              .status(403)
+              .json({ message: `Role ${roles[i]} does not exists` });
+          }
+        }
+      }
+
+      next();
+    };
+
+  debemos exportarlo desde el index para importarlo en la ruta de user
+
+    middlewares/index.js
+      import { checkRoles } from "./verify";
+
+      export { verifyToken, isAdmin, isModerator, checkRoles };
+
+  ahora lo importamos en users.routes.js
+    import { verifyToken, isAdmin, isModerator, checkRoles } from "../middlewares";
+
+    const router = Router();
+
+    router.post("/", [verifyToken, isAdmin, checkRoles], userCtrl.createUser);
+
+POSTMAN 
+  HEADERS: 
+    key: x-access-token           value: <key-token-admin>
+    key: Content-type             value: application/json
+
+  BODY: 
+    {
+        "username": "Martin",
+        "email": "martin@gmail.com",
+        "roles": ["super", "writer"]
+    }
+
+  Error 400
+    {
+        "message": " Role super does not exists"
+    }
+
+Verificamos si al crear un usuario el username y/o el email ya estan registrados
+
+  // verifica que el username y/o email no se duplique
+  export const duplicate = async (req, res, next) => {
+    const { username, email } = req.body;
+
+    const user = await User.findOne({ username: username });
+
+    if (user) return res.status(400).json({ message: "user already exists" });
+
+    const emailUser = await User.findOne({ email: email });
+
+    if (emailUser)
+      return res.status(400).json({ message: "email already exists" });
+
+    next();
+  };
+
+Solo quedaria exportarlo en index e importarlo en las rutas a proteger.

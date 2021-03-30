@@ -1,0 +1,66 @@
+Comenzamos creando la carpeta de la API
+Ingresamos al directorio creado y lanzamos el comando 
+ -> npm init -y 
+ para crear el package.json, este contendrá la configuración 
+ de nuestra API.
+
+
+******* Modulos a instalar ***********
+------  --------  ------- ---------
+npm i 
+  -> express //Framework de node permite la creacion del server 
+  -> bcryptjs //Sirve para cifrar datos 
+  -> cors  //Permite comunicar el back con otros server, establece las rules
+  -> dotenv //Sirve para crear variables de entorno 
+  -> jsonwebtoken //Brinda un token al user para la interacción con el back 
+  -> mongoose //Modulo de conección a la bd 
+  -> morgan //Permite ver las consultas que llegan al server 
+  -> helmet //Restringe la información que brinda el server y permite validaciones
+
+
+********** Configuramos Babel para utilizar JS moderno *********
+
+ npm i @babel/core @babel/cli @babel/node @babel/preset-env nodemon -D 
+ // -D es para que se intale a nivel de desarrollo 
+
+ Bien ahora para poder levantar el server de manera basica vamos a configurar
+ el package.json con babel 
+
+ "scripts": {
+    "start": "babel-node index.js"
+  },
+
+y agregamos un archivo de configuracion de babel .babelrc
+
+{
+  "presets": [
+    "@babel/preset-env"
+  ]
+}
+
+********** Inicio de nuestro server **************
+Hecho esto ya podemos importar express y configurar nuestro server 
+en index.js
+
+import express from "express";
+
+const app = express();
+
+app.listen(3000);
+
+console.log("Server listen on port", 3000);
+
+***** Haremos que el server escuche nuestros cambios *****
+ -> "dev": "nodemon index.js --exec babel-node" 
+ A la vez dejamos configurados los script para hacer deploy 
+ en producción y correr codigo de producción.
+
+  "scripts": {
+    "dev": "nodemon index.js --exec babel-node",
+    "build": "babel src --out-dir dist",
+    "start": "node dist/server/index.js"
+  },
+
+  De esta manera tenemos el comando npm run build para convertir el codigo 
+de produccion, npm start para ejecutarlo y npm run dev para ejecutar 
+codigo de desarrollo. 

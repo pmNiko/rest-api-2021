@@ -1,0 +1,17 @@
+Armamos la estructura de la API 
+Dentro de src/ 
+  -> controllers/     //Funciones de las peticiones HTTP
+  -> libs/            //Aca van el codigo reutilizable
+  -> middlewares/     //Aca van los middlewares de express
+  -> models/          //Modelo de datos para mongodb
+  -> routes/          //Aca iran las urls que tendra nuestro server
+  -> server/          //Archivos principales de nuestra API
+    app.js            //Configuración principal de la API 
+    config.js         //Configuración relacionada a la coneccion de la BD por ejemplo la dirección
+    database.js       //Tendra la collección de la BD
+    -> index.js     //Lo movemos dentro de este directorio server/
+    Por lo tanto debemos modificar el package.js 
+
+  "scripts": {
+    "dev": "nodemon src/server/index.js --exec babel-node"
+  },

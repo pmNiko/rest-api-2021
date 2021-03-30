@@ -1,0 +1,20 @@
+Antes de comenzar creamos el .gitignore y dentro 
+ /node_modules    con esto lo excluimos 
+
+******* Reordenamiento del codigo en la estructura ******
+
+Vamos a mover del index.js a app.js 
+
+  import express from "express";
+
+  const app = express();
+
+  export default app;
+
+En index.js debemos importar este archivo
+
+  import app from "./app";
+
+  app.listen(3002);
+
+  console.log("Server corriendo correctamente!!!");

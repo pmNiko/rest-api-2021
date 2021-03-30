@@ -1,0 +1,31 @@
+********* Conección a la Base de datos ***********
+
+En el database.js 
+  import mongoose from "mongoose";
+
+  export async function connect() {
+    await mongoose
+      .connect(
+        "mongodb://localhost/apiRestProducts",
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: true,
+          useCreateIndex: true,
+        }
+      )
+      .then((db) => console.log(">>>> Database is connected!"))
+      .catch((err) => console.log(">>> Error: ", err));
+  }
+
+Una vez configurada la conexión importamos el archivo al index.js
+
+  import app from "./app";
+  import { connect } from "./database";
+
+  app.listen(3002);
+  connect();
+
+Por consola saldrá
+  Server corriendo correctamente!!!
+  >>>> Database is connected!
