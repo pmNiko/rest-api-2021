@@ -1,0 +1,77 @@
+******** Validaciones de schema ********
+
+Para validar nuestro esquema utilizaremos npm i joi
+
+Creamos una carpeta schema dentro de src/schema y como vamos a 
+comenzar validando el schema de products, creamos un archivo 
+ > productSchema.js
+
+  import Joi from "joi";
+
+  // validacion para creación
+  const nameAndCatCreate = Joi.string().alphanum().min(4).max(13).required();
+  // validacion para actualización
+  const nameAndCatUpdate = Joi.string().alphanum().min(4).max(13);
+
+  // schema de creación
+  export const createSchema = Joi.object({
+    name: nameAndCatCreate,
+    category: nameAndCatCreate,
+    price: Joi.number().positive().precision(2).required(),
+    imgURL: Joi.string().min(13),
+  });
+
+  // schema de actualización
+  export const updateSchema = Joi.object({
+    name: nameAndCatUpdate,
+    category: nameAndCatUpdate,
+    price: Joi.number().positive().precision(2),
+    imgURL: Joi.string().min(13),
+  });
+
+Ahora vamos a utilizar los schema de validación, creamos middlewares/validators/product.js
+
+  import * as product from "../schema/productSchema";
+
+  // Middleware de validación de schema para crear un producto
+  export const create = (req, res, next) => {
+    const { error } = product.createSchema.validate(req.body);
+    error ? res.status(422).json({ error: error.details[0].message }) : next();
+  };
+
+  // Middleware de validación de schema para actualizar un producto
+  export const update = (req, res, next) => {
+    const { error } = product.updateSchema.validate(req.body);
+    error ? res.status(422).json({ error: error.details[0].message }) : next();
+  };
+
+Por ultimo vamos a utilizar nuestro middle de validación de schema 
+En el archivo de las rutas del producto 
+  import { verifyToken, isAdmin, isModerator } from "../middlewares";
+  import * as validator from "../middlewares/validators/product";
+
+  const router = Router();
+
+  // End Point para crear
+  router.post(
+    "/",
+    [verifyToken, isModerator, validator.create],
+    productsCtrl.createProduct
+  );
+
+  // End Point para obtener todos
+  router.get("/", productsCtrl.getProducts);
+
+  // End Point para obtener un producto por ID
+  router.get("/:id", productsCtrl.getProductById);
+
+  // End Point para actualizar por ID
+  router.put(
+    "/:id",
+    [verifyToken, isModerator, validator.update],
+    productsCtrl.updateProductById
+  );
+
+Ya podemos probar nuestras peticiones POST and PUT con validación de schema
+
+

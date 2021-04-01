@@ -1,0 +1,66 @@
+******* Validaciones de registro y autenticacion ******
+
+Iniciamos preparando el schema de authenticacion
+ schema/authSchema.js
+  import Joi from "joi";
+
+  // roles permitidos
+  const roles = Joi.array().items(
+    Joi.string().valid("admin", "moderator", "user")
+  );
+  // email
+  const email = Joi.string().email().required();
+  // password
+  const password = Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"));
+
+  // schema de registro de user
+  export const signUpSchema = Joi.object({
+    username: Joi.string().required(),
+    email,
+    password,
+    roles,
+  });
+
+  // schema de login de user
+  export const signInSchema = Joi.object({ email, password });
+
+
+Con el schema ya creado vamos a crear el middle de validación 
+  Middleware/validators/auth.js
+
+  import * as auth from "../../schema/authSchema";
+
+  // Middleware de validación de schema para rehistrar un user
+  export const signUp = (req, res, next) => {
+    const { error } = auth.signUpSchema.validate(req.body);
+    error ? res.status(422).json({ error: error.details[0].message }) : next();
+  };
+
+  // Middleware de validación de schema para login de user
+  export const signIn = (req, res, next) => {
+    const { error } = auth.signInSchema.validate(req.body);
+    error ? res.status(422).json({ error: error.details[0].message }) : next();
+  };
+
+Por ultimo utilizamos el middle en las rutas
+  import * as authCtrl from "../controllers/auth.controller";
+  import * as validator from "../middlewares/validators/auth";
+
+  const router = Router();
+
+  router.post("/signup", validator.signUp, authCtrl.singup);
+  router.post("/signin", validator.signIn, authCtrl.singin);
+
+POSTMAN 
+  Ya podemos probar nuestras rutas con sus validaciones a travez de Joi
+
+Por ultimo vamos a utilizar nuestros middle de Verify para responder ante 
+la duplicación de username o email, ademas de checkear los roles
+
+  en auth.routes.js importamos 
+
+  import { duplicate, checkRoles } from "../middlewares/verify";
+
+  router.post("/signup",[duplicate, checkRoles],validator.signUp,authCtrl.singup);
+
+Con esto ya manejamos el error de duplicación y/o inexistencia de roles.
