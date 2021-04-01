@@ -1,0 +1,172 @@
+******** Manejemos la creación de users ********
+
+  Vamos a hacer el ciclo completo con validaciones 
+  y proteccion de rutas para la creación de users.
+
+  Reutilizamos parte del codigo del auth.controller.js 
+  /*
+    Controller de user
+  */
+  import User from "../models/User";
+  import Role from "../models/Role";
+
+  // fn para crear users
+  export const createUser = async (req, res) => {
+    const { username, email, roles } = req.body;
+
+    // creo una instancia de User
+    let user = new User({
+      username,
+      email,
+      password: await User.encryptPassword("changeme"),
+    });
+
+    // comprobación de roles
+    if (roles) {
+      //si nos envian roles
+      const foundRoles = await Role.find({ name: { $in: roles } });
+      if (!foundRoles)
+        return res.status(422).json({ message: "Roles not found" });
+      user.roles = foundRoles.map((role) => role._id);
+    } else {
+      //asignación de rol por defecto
+      const role = await Role.findOne({ name: "user" });
+      user.roles = [role._id];
+    }
+
+    user.save((error, user) => {
+      if (error)
+        return res.status(500).send({
+          message: "Internal server error.",
+        });
+      if (!user)
+        return res.status(404).send({
+          message: "404 not found.",
+        });
+
+      res.status(200).json({ data: user });
+    });
+  };
+
+Bien probemos crear un user en postman.
+
+Nos encontramos con que manejamos la verificación del token y permisos del rol. 
+pero el user se crea de todas maneras, siendo un gran error. 
+
+Cambiemos el modelo de user. 
+
+    {
+    username: {
+      type: String,
+      unique: true,
+      required: true,     //aca
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,     //aca
+    },
+
+Volvamos a probar. Recibimos un 500 como respuesta puesto que el modelo 
+requiere el username y email para instanciarse. Para esto vamos a crear un schema de 
+validación y un middle para proteger la ruta. 
+
+Schema/userSchema.js 
+  import Joi from "joi";
+
+  // roles permitidos
+  const roles = Joi.array().items(
+    Joi.string().valid("admin", "moderator", "user")
+  );
+  // email
+  const email = Joi.string().email().required();
+
+  // schema de registro de user
+  export const createSchema = Joi.object({
+    username: Joi.string().required(),
+    email,
+    roles,
+  });
+
+middlewares/validators/user.js
+  import * as user from "../../schema/userSchema";
+
+  // Middleware de validacion de schema para dar de alta un user
+  export const create = (req, res, next) => {
+    const { error } = user.createSchema.validate(req.body);
+    error ? res.status(422).json({ error: error.details[0].message }) : next();
+  };
+
+Ahora validemos la ruta. 
+
+  import * as validator from "../middlewares/validators/user";
+
+  const router = Router();
+
+  router.post(
+    "/",
+    [verifyToken, isAdmin, validator.create, duplicate, checkRoles],
+    userCtrl.createUser
+  );
+
+Por ultimo listemos los users, comencemos por el controller de users 
+
+  fn modular 
+  /*
+    Esta función abstrae la respuesta del servidor
+  */
+  function resServer(res, error, resource) {
+    if (error)
+      return res.status(500).send({
+        message: "Internal server error.",
+      });
+    if (!resource)
+      return res.status(404).send({
+        message: "404 not found.",
+      });
+
+    res.status(200).json({ data: resource });
+  }
+
+  // fn para crear users
+  export const createUser = async (req, res) => {
+    const { username, email, roles } = req.body;
+
+    // creo una instancia de User
+    let user = new User({
+      username,
+      email,
+      password: await User.encryptPassword("changeme"),
+    });
+
+    // comprobación de roles
+    if (roles) {
+      //si nos envian roles
+      const foundRoles = await Role.find({ name: { $in: roles } });
+      if (!foundRoles)
+        return res.status(422).json({ message: "Roles not found" });
+      user.roles = foundRoles.map((role) => role._id);
+    } else {
+      //asignación de rol por defecto
+      const role = await Role.findOne({ name: "user" });
+      user.roles = [role._id];
+    }
+
+    user.save((error, user) => {
+      resServer(res, error, user);
+    });
+  };
+
+  // fn para recuperar todos los users
+  export const getUsers = async (req, res) => {
+    User.find({}, { password: 0 })
+      .populate("roles", { _id: 0 })
+      .exec((error, users) => {
+        resServer(res, error, users);
+      });
+  };
+
+  Por ultimo la ruta de getUsers() 
+    router.get("/", [verifyToken, isAdmin], userCtrl.getUsers);
+
+  Perfecto!!!!

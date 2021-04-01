@@ -20,10 +20,10 @@ export const singup = async (req, res) => {
 
   // comprobación de roles
   if (roles) {
-    console.log(roles);
     //si nos envian roles
     const foundRoles = await Role.find({ name: { $in: roles } });
-    console.log(foundRoles);
+    if (!foundRoles)
+      return res.status(422).json({ message: "Roles not found" });
     user.roles = foundRoles.map((role) => role._id);
   } else {
     //asignación de rol por defecto

@@ -1,0 +1,135 @@
+******** Vamos a  manejar errrores del controlador ******
+
+1xx : el servidor reconoce una solicitud
+2xx (correcto): el servidor completó la solicitud como se esperaba
+3xx (redirección): el cliente debe realizar más acciones para completar la solicitud
+4xx (error del cliente): el cliente envió una solicitud no válida
+5xx (error del servidor): el servidor no pudo cumplir una solicitud válida debido a 
+un error con el servidor
+
+400 Solicitud incorrecta: el cliente envió una solicitud no válida, como la 
+  falta de un cuerpo o parámetro de solicitud requerido
+401 No autorizado: el cliente no pudo autenticarse con el servidor
+403 Prohibido: el cliente se autenticó pero no tiene permiso para acceder al 
+  recurso solicitado
+404 no encontrado: el recurso solicitado no existe
+412 Precondición fallida: una o más condiciones en los campos de encabezado 
+  de solicitud evaluados como falsos
+422 Unprocessable Entity
+500 Internal Server Error: se produjo un error genérico en el servidor
+503 Servicio no disponible: el servicio solicitado no está disponible
+
+Con esto vamos a realizar algunos cambios en nuestro controlador de products
+
+  // fn para obtener los productos
+  export const getProducts = async (req, res) => {
+    Product.find({}).exec((error, products) => {
+      if (error)
+        return res.status(500).send({
+          message: "Error en la petición al servidor! error 500",
+        });
+      if (!products)
+        return res.status(404).send({
+          message: "Recurso no encontrado error 404!",
+        });
+
+      res.json(products);
+    });
+  };
+
+  // fn para crear producto
+  export const createProduct = async (req, res) => {
+    const { name, category, price, imgURL } = req.body;
+
+    const product = new Product({ name, category, price, imgURL });
+
+    // Utilizamos la función save() que tiene asociada product
+    // la cual tendra como respuesta un error o el obj guardado
+    product.save((error, product) => {
+      if (error)
+        return res.status(500).send({
+          message: "Internal server error.",
+        });
+      if (!product)
+        return res.status(404).send({
+          message: "404 not found.",
+        });
+
+      res.json(product);
+    });
+  };
+
+
+  // fn para obtener producto por ID
+  export const getProductById = async (req, res) => {
+    Product.findById(req.params.id, (error, product) => {
+      if (error)
+        return res.status(500).send({
+          message: "Internal server error.",
+        });
+      if (!product)
+        return res.status(404).send({
+          message: "404 not found.",
+        });
+
+      res.json(product);
+    });
+  };
+
+  // fn para actualizar producto por ID
+  export const updateProductById = async (req, res) => {
+    Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true },
+      (error, product) => {
+        if (error)
+          return res.status(500).send({
+            message: "Internal server error.",
+          });
+        if (!product)
+          return res.status(404).send({
+            message: "404 not found.",
+          });
+
+        res.json(product);
+      }
+    );
+  };
+
+  // fn para eliminar producto por ID
+  export const deleteProductById = async (req, res) => {
+    Product.findByIdAndDelete(req.params.id, (error, product) => {
+      if (error)
+        return res.status(500).send({
+          message: "Internal server error.",
+        });
+      if (!product)
+        return res.status(404).send({
+          message: "404 not found.",
+        });
+
+      res.json(true);
+    });
+  };
+
+De esta manera ya estamos manejando las distintas respuestas de nuestro server.
+
+Antes de continuar a refactorizar vamos a manejar el caso de que nos envien un rol 
+que no se encuentra en la bd al registrarse.
+
+  ......
+    // comprobación de roles
+    if (roles) {
+      //si nos envian roles
+      const foundRoles = await Role.find({ name: { $in: roles } });
+      if (!foundRoles)                                                  //aca
+        return res.status(422).json({ message: "Roles not found" });    //aca
+      user.roles = foundRoles.map((role) => role._id);
+    } else {
+      //asignación de rol por defecto
+      const role = await Role.findOne({ name: "user" });
+      user.roles = [role._id];
+    }
+
+De esta manera si no se encontraran los roles creados manejariamos la respuesta.

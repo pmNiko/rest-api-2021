@@ -7,8 +7,7 @@ const router = Router();
 
 router.post(
   "/signup",
-  [duplicate, checkRoles],
-  validator.signUp,
+  [validator.signUp, duplicate, checkRoles],
   authCtrl.singup
 );
 router.post("/signin", validator.signIn, authCtrl.singin);

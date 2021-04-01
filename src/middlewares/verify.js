@@ -9,7 +9,6 @@ import User from "../models/User";
 // verifica que el role enviado exista
 export const checkRoles = (req, res, next) => {
   let roles = req.body.roles;
-  console.log("No existe", roles);
   if (roles) {
     for (let i = 0; i < roles.length; i++) {
       if (!ROLES.includes(roles[i])) {
