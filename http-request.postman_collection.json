@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "08e5ed4f-7c40-4206-aef1-26e71f41b795",
+		"name": "Api Company Products",
+		"description": "Api desarrollada con la arquitectura REST. \nEsta enfocada en el ABM de productos, y admite la autenticación de usuarios y roles.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "/products GET",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/productId DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjI3Y2Q4NGY1ZDg3MDVmNDIyMzZjOSIsImlhdCI6MTYxNzMxMTQ3NywiZXhwIjoxNjE3Mzk3ODc3fQ.w1_H_F9jyu5ymZmJjDtG4WlKC9dNE4686AGgbfrucYQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4000/api/products/60663898c0b1d707f24a65bd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"products",
+								"60663898c0b1d707f24a65bd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/:productId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/products/5febc8056434c90c3fd7217b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"products",
+								"5febc8056434c90c3fd7217b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/:productId   PUT",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Laptop HPs\",\n    \"price\": 800.80\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/products/:5febcd01d6127c0cc62ac6ce",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"products",
+								":5febcd01d6127c0cc62ac6ce"
+							],
+							"variable": [
+								{
+									"key": "5febcd01d6127c0cc62ac6ce",
+									"value": "",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products POST",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZWRmNTMxYzU4NjI1MDNmNWU4MzhmZCIsImlhdCI6MTYwOTU5MzM1MSwiZXhwIjoxNjA5Njc5NzUxfQ.Ih2Pd_tY8uZ033X0hAkuxg-WlJrcoNVUT7GK1d9N_RY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Laptop MSI\",\n    \"price\": 700.90,\n    \"category\": \"Laptops\",\n    \"imgURL\": \"https://images-na.ssl-images-amazon.com/images/I/81mIXd99GrL._AC_SL1500_.jpg\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "/users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjI3Y2Q4NGY1ZDg3MDVmNDIyMzZjOSIsImlhdCI6MTYxNzMxNjU3NiwiZXhwIjoxNjE3NDAyOTc2fQ.h5v9l16io0LzuZLpdV0o0GiD0X8qEQv8ASNHujGpZOM",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"First user\",\n    \"email\": \"email@mail.com\", \n    \"roles\": [\"admin\"]\n    \n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjI3Y2Q4NGY1ZDg3MDVmNDIyMzZjOSIsImlhdCI6MTYxNzMxNjU3NiwiZXhwIjoxNjE3NDAyOTc2fQ.h5v9l16io0LzuZLpdV0o0GiD0X8qEQv8ASNHujGpZOM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "/api/auth/singup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Heroe\",\n    \"email\": \"ultra@gmail.com\",\n    \"password\": \"power\",\n    \"roles\": [\"admin\"]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/auth/singIn",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ultra@gmail.com\",\n    \"password\": \"power\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
