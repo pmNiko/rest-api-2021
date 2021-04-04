@@ -29,6 +29,13 @@ export const getProductById = async (req, res) => {
   });
 };
 
+// fn para obtener producto por ID
+export const search = async (req, res) => {
+  // const data = req.query.limit;
+  console.log(req.query);
+  res.status(200).json({ message: `Llego la respuesta: ${req.query}` });
+};
+
 // fn para actualizar producto por ID
 export const updateProductById = async (req, res) => {
   Product.findByIdAndUpdate(
