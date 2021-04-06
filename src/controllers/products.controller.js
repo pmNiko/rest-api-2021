@@ -1,7 +1,6 @@
 /*
   Controller de products
 */
-import { response } from "express";
 import Product from "../models/Product";
 
 // fn para crear producto
@@ -15,25 +14,24 @@ export const createProduct = async (req, res) => {
   });
 };
 
-// fn para obtener los productos
+// Obtiene los productos en base a conditions, sort, skip y limit
 export const getProducts = async (req, res) => {
-  Product.find({}).exec((error, products) => {
-    resServer(res, error, products);
-  });
+  const { name, category, sorts, skips, limits } = req.query;
+
+  const conditions = (name && { name }) || (category && { category });
+  const sort = sorts === "asc" ? { _id: 1 } : { _id: -1 };
+  const skip = skips && parseInt(skips);
+  const limit = limits && parseInt(limits);
+
+  search({ conditions, sort, skip, limit, res });
 };
 
 // fn para obtener producto por ID
 export const getProductById = async (req, res) => {
+  console.log("Paso por aca...");
   Product.findById(req.params.id, (error, product) => {
     resServer(res, error, product);
   });
-};
-
-// fn para obtener producto por ID
-export const search = async (req, res) => {
-  // const data = req.query.limit;
-  console.log(req.query);
-  res.status(200).json({ message: `Llego la respuesta: ${req.query}` });
 };
 
 // fn para actualizar producto por ID
@@ -62,6 +60,23 @@ export const deleteProductById = async (req, res) => {
 
     res.status(200).json({ data: true });
   });
+};
+
+// fn modular de busqueda
+const search = async ({
+  conditions = {},
+  sort = {},
+  skip = 0,
+  limit = 10,
+  res,
+}) => {
+  Product.find(conditions)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .exec((error, products) => {
+      resServer(res, error, products);
+    });
 };
 
 /*

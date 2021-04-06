@@ -1,0 +1,46 @@
+******** Parametros de filtro en la URL ********
+
+Ahora que ya tenemos nuestro stack de rutas y controller de productos 
+vamos a utilizar los query params para enviar parametros y asi poder 
+filtrar nuestras busquedas. 
+
+  en la url luego de nuestro endPoint vamos a colocar un signo "?" 
+  seguido el nombre de nuestro param  "=" y seguido el valor 
+
+  En en controller lo recuperamos a travez de req.query.<param>
+
+  Antes de pasar a nuestra accion getProducts vamos a crear una fn 
+  modular para poderla reutilizar. 
+
+  // fn modular de busqueda
+  const search = async ({
+    conditions = {},
+    sort = {},
+    skip = 0,
+    limit = 10,
+    res,
+  }) => {
+    Product.find(conditions)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec((error, products) => {
+        resServer(res, error, products);
+      });
+  };
+
+  Analicemosla en profundidad. 
+
+  Por ultimo hacemos uso de ella en la acción requerida. 
+
+  // Obtiene los productos en base a conditions, sort, skip y limit
+  export const getProducts = async (req, res) => {
+    const { name, category, sorts, skips, limits } = req.query;
+
+    const conditions = (name && { name }) || (category && { category });
+    const sort = sorts === "asc" ? { _id: 1 } : { _id: -1 };
+    const skip = skips && parseInt(skips);
+    const limit = limits && parseInt(limits);
+
+    search({ conditions, sort, skip, limit, res });
+  };

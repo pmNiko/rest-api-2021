@@ -15,9 +15,6 @@ router.post(
   productsCtrl.createProduct
 );
 
-// End Point para busqueda con params
-router.get("/search", productsCtrl.search);
-
 // End Point para obtener todos
 router.get("/", productsCtrl.getProducts);
 
