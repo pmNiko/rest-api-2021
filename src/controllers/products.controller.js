@@ -2,6 +2,8 @@
   Controller de products
 */
 import Product from "../models/Product";
+import faker from "faker";
+faker.locale = "es";
 
 // fn para crear producto
 export const createProduct = async (req, res) => {
@@ -14,13 +16,48 @@ export const createProduct = async (req, res) => {
   });
 };
 
+// fn para generar datos falsos a travez de faker
+export const generate = (req, res) => {
+  let categories = [];
+  for (let i = 0; i < 5; i++) {
+    categories.push(faker.commerce.department());
+  }
+
+  let products = [];
+
+  for (let i = 0; i < 30; i++) {
+    const product = new Product();
+    product.category =
+      categories[Math.floor(Math.random() * categories.length)];
+    product.name = faker.commerce.productName();
+    product.price = faker.commerce.price();
+    product.imgURL = faker.image.technics();
+
+    try {
+      const productSaved = product.save();
+      products.push(productSaved);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: "Error fake data save." });
+    }
+  }
+
+  res.json({ data: products });
+};
+
+// fn para vaciar la colleccion de products
+export const deleteAll = (req, res) => {
+  Product.deleteMany({}, (error, products) => {
+    resServer(res, error, products);
+  });
+};
+
 // fn para obtener los productos por pagina
 export const getProductsPerPage = async (req, res) => {
   const { limits, pages } = req.query; // received limits for query strings
-  const limit = parseInt(limits) || 2; // if limits is null
+  const limit = parseInt(limits) || 10; // if limits is null
   const page = parseInt(pages) || 1; // if page is null
   const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
-
   search({ skip, limit, res });
 };
 

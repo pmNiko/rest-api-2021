@@ -15,6 +15,9 @@ router.post(
   productsCtrl.createProduct
 );
 
+// End Point para generar datos falsos
+router.get("/generate", productsCtrl.generate);
+
 // End Point para obtener productos por página
 router.get("/page", productsCtrl.getProductsPerPage);
 
@@ -30,6 +33,9 @@ router.put(
   [verifyToken, isModerator, validator.update],
   productsCtrl.updateProductById
 );
+
+// End Point para eliminar todos los productos
+router.delete("/fake-data", productsCtrl.deleteAll);
 
 // End Point para eliminar por ID
 router.delete("/:id", [verifyToken, isAdmin], productsCtrl.deleteProductById);

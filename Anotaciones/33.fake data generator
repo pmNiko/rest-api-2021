@@ -1,0 +1,56 @@
+********** Vamos a generar data fake para nuestra paginación ********
+
+  utilizamos la libreria npm i faker
+
+Ahora vamos a generar una ruta por get para que cuando accedamos 
+a ella se generen nuestros datos fake, y otra para eliminar 
+todos los productos de la collecion.
+
+  routes
+    // End Point para generar datos falsos
+    router.get("/generate", productsCtrl.generate);
+
+    // End Point para eliminar todos los productos
+    router.delete("/fake-data", productsCtrl.deleteAll);
+
+Ahora generemos las acciones del controller 
+  import faker form "faker";
+  faker.locale = "es";
+
+  // fn para generar datos falsos a travez de faker
+  export const generate = (req, res) => {
+    let categories = [];
+    for (let i = 0; i < 5; i++) {
+      categories.push(faker.commerce.department());
+    }
+
+    let products = [];
+
+    for (let i = 0; i < 30; i++) {
+      const product = new Product();
+      product.category =
+        categories[Math.floor(Math.random() * categories.length)];
+      product.name = faker.commerce.productName();
+      product.price = faker.commerce.price();
+      product.imgURL = faker.image.technics();
+
+      try {
+        const productSaved = product.save();
+        products.push(productSaved);
+      } catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: "Error fake data save." });
+      }
+    }
+
+    res.json({ data: products });
+  };
+
+  // fn para vaciar la colleccion de products
+  export const deleteAll = (req, res) => {
+    Product.deleteMany({}, (error, products) => {
+      resServer(res, error, products);
+    });
+  };
+
+Con esto ya podemos generar datos fake y probar paginar y buscar segun condiciones.
