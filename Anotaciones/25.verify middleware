@@ -1,5 +1,7 @@
 ********** Verify roles ********
 
+export const ROLES = ["user", "admin", "moderator"];
+
 Verificamos si al crear un usuario los roles que nos envia el admin existe 
 
   middleware/verify.js 

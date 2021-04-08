@@ -1,0 +1,30 @@
+******* Paginación de productos ********
+
+Definamos una ruta 
+
+  // End Point para obtener productos por página
+  router.get("/page", productsCtrl.getProductsPerPage);
+
+  // End Point para obtener un producto por ID
+  router.get("/:id", productsCtrl.getProductById);
+
+  // End Point para obtener todos
+  router.get("/", productsCtrl.getProducts);
+
+Si alteraramos el orden obtendriamos un 500 por consola. 
+Esto se debe a que el match del routing va accionar con 
+la primer ruta coincidente. 
+
+Bien ahora definamos nuestra accion de controlador 
+
+  // fn para obtener los productos por pagina
+  export const getProductsPerPage = async (req, res) => {
+    const { limits, pages } = req.query; // received limits for query strings
+    const limit = parseInt(limits) || 2; // if limits is null
+    const page = parseInt(pages) || 1; // if page is null
+    const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
+
+    search({ skip, limit, res });
+  };
+
+Reutilizamos nuestra fn base ocupandonos solo de pasarle los params correctamente.

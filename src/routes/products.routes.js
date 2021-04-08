@@ -15,11 +15,14 @@ router.post(
   productsCtrl.createProduct
 );
 
-// End Point para obtener todos
-router.get("/", productsCtrl.getProducts);
+// End Point para obtener productos por página
+router.get("/page", productsCtrl.getProductsPerPage);
 
 // End Point para obtener un producto por ID
 router.get("/:id", productsCtrl.getProductById);
+
+// End Point para obtener todos
+router.get("/", productsCtrl.getProducts);
 
 // End Point para actualizar por ID
 router.put(

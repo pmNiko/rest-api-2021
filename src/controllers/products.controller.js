@@ -14,6 +14,23 @@ export const createProduct = async (req, res) => {
   });
 };
 
+// fn para obtener los productos por pagina
+export const getProductsPerPage = async (req, res) => {
+  const { limits, pages } = req.query; // received limits for query strings
+  const limit = parseInt(limits) || 2; // if limits is null
+  const page = parseInt(pages) || 1; // if page is null
+  const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
+
+  search({ skip, limit, res });
+};
+
+// fn para obtener producto por ID
+export const getProductById = async (req, res) => {
+  Product.findById(req.params.id, (error, product) => {
+    resServer(res, error, product);
+  });
+};
+
 // Obtiene los productos en base a conditions, sort, skip y limit
 export const getProducts = async (req, res) => {
   const { name, category, sorts, skips, limits } = req.query;
@@ -24,14 +41,6 @@ export const getProducts = async (req, res) => {
   const limit = limits && parseInt(limits);
 
   search({ conditions, sort, skip, limit, res });
-};
-
-// fn para obtener producto por ID
-export const getProductById = async (req, res) => {
-  console.log("Paso por aca...");
-  Product.findById(req.params.id, (error, product) => {
-    resServer(res, error, product);
-  });
 };
 
 // fn para actualizar producto por ID
