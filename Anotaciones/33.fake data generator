@@ -19,10 +19,13 @@ Ahora generemos las acciones del controller
 
   // fn para generar datos falsos a travez de faker
   export const generate = (req, res) => {
-    let categories = [];
-    for (let i = 0; i < 5; i++) {
-      categories.push(faker.commerce.department());
-    }
+    let categories = [
+      "Electronica",
+      "Audio",
+      "Telefonia",
+      "Juegos",
+      "Computacion",
+    ];
 
     let products = [];
 
@@ -46,6 +49,7 @@ Ahora generemos las acciones del controller
     res.json({ data: products });
   };
 
+
   // fn para vaciar la colleccion de products
   export const deleteAll = (req, res) => {
     Product.deleteMany({}, (error, products) => {
@@ -54,3 +58,28 @@ Ahora generemos las acciones del controller
   };
 
 Con esto ya podemos generar datos fake y probar paginar y buscar segun condiciones.
+
+Antes de continuar refactoricemos las acciones getProducts y getProductsPerPage
+
+  // Obtiene los productos en base a conditions, sort, skip y limit
+  export const getProducts = async (req, res) => {
+    let { name, category, sort, skip, limit } = req.query;
+
+    const conditions = (name && { name }) || (category && { category });
+    sort = sort === "asc" ? { _id: 1 } : { _id: -1 };
+    skip = skip && parseInt(skip);
+    limit = limit && parseInt(limit);
+
+    search({ conditions, sort, skip, limit, res });
+  };
+
+  // fn para obtener los productos por pagina
+  export const getProductsPerPage = async (req, res) => {
+    let { limit, page } = req.query; // received limits for query strings
+    limit = parseInt(limit) || 10; // if limits is null
+    page = parseInt(page) || 1; // if page is null
+    const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
+    search({ skip, limit, res });
+  };
+
+  Ahora si ;)

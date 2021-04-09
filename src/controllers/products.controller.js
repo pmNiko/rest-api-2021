@@ -3,6 +3,7 @@
 */
 import Product from "../models/Product";
 import faker from "faker";
+import { json } from "express";
 faker.locale = "es";
 
 // fn para crear producto
@@ -18,10 +19,13 @@ export const createProduct = async (req, res) => {
 
 // fn para generar datos falsos a travez de faker
 export const generate = (req, res) => {
-  let categories = [];
-  for (let i = 0; i < 5; i++) {
-    categories.push(faker.commerce.department());
-  }
+  let categories = [
+    "Electronica",
+    "Audio",
+    "Telefonia",
+    "Juegos",
+    "Computacion",
+  ];
 
   let products = [];
 
@@ -47,16 +51,14 @@ export const generate = (req, res) => {
 
 // fn para vaciar la colleccion de products
 export const deleteAll = (req, res) => {
-  Product.deleteMany({}, (error, products) => {
-    resServer(res, error, products);
-  });
+  Product.deleteMany({}, (error, products) => resServer(res, error, products));
 };
 
 // fn para obtener los productos por pagina
 export const getProductsPerPage = async (req, res) => {
-  const { limits, pages } = req.query; // received limits for query strings
-  const limit = parseInt(limits) || 10; // if limits is null
-  const page = parseInt(pages) || 1; // if page is null
+  let { limit, page } = req.query; // received limits for query strings
+  limit = parseInt(limit) || 10; // if limits is null
+  page = parseInt(page) || 1; // if page is null
   const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
   search({ skip, limit, res });
 };
@@ -70,12 +72,12 @@ export const getProductById = async (req, res) => {
 
 // Obtiene los productos en base a conditions, sort, skip y limit
 export const getProducts = async (req, res) => {
-  const { name, category, sorts, skips, limits } = req.query;
+  let { name, category, sort, skip, limit } = req.query;
 
   const conditions = (name && { name }) || (category && { category });
-  const sort = sorts === "asc" ? { _id: 1 } : { _id: -1 };
-  const skip = skips && parseInt(skips);
-  const limit = limits && parseInt(limits);
+  sort = sort === "asc" ? { _id: 1 } : { _id: -1 };
+  skip = skip && parseInt(skip);
+  limit = limit && parseInt(limit);
 
   search({ conditions, sort, skip, limit, res });
 };
