@@ -61,4 +61,4 @@ Por esto:
   // verifica la veracidad del token
     const decoded = token.verify(token);
 
-
+Ya podemos borrar el archivo config.js dentro de server.

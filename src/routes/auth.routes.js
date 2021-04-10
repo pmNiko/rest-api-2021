@@ -1,15 +1,14 @@
 import { Router } from "express";
 import * as authCtrl from "../controllers/auth.controller";
-import * as validator from "../middlewares/validators/auth";
 import { duplicate, checkRoles } from "../middlewares/verify";
+import * as schema from "../middlewares/validators/auth";
 
 const router = Router();
 
-router.post(
-  "/signup",
-  [validator.signUp, duplicate, checkRoles],
-  authCtrl.singup
-);
-router.post("/signin", validator.signIn, authCtrl.signin);
+// end point for register
+router.post("/signup", [schema.signup, duplicate, checkRoles], authCtrl.singup);
+
+// end point fro login
+router.post("/signin", schema.signin, authCtrl.signin);
 
 export default router;

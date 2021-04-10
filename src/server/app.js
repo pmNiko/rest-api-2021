@@ -30,11 +30,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/contact", function (req, res) {
-  console.log(req.query.name);
-  res.json("Contact support.");
-});
-
 // Middleware para setear la url del end point
 app.use("/api/products", productsRoutes);
 app.use("/api/auth", authRoutes);

@@ -4,14 +4,14 @@
 import { Router } from "express";
 import * as productsCtrl from "../controllers/products.controller";
 import { verifyToken, isAdmin, isModerator } from "../middlewares";
-import * as validator from "../middlewares/validators/product";
+import * as schema from "../middlewares/validators/product";
 
 const router = Router();
 
 // End Point para crear
 router.post(
   "/",
-  [verifyToken, isModerator, validator.create],
+  [verifyToken, isModerator, schema.create],
   productsCtrl.createProduct
 );
 
@@ -30,7 +30,7 @@ router.get("/", productsCtrl.getProducts);
 // End Point para actualizar por ID
 router.put(
   "/:id",
-  [verifyToken, isModerator, validator.update],
+  [verifyToken, isModerator, schema.update],
   productsCtrl.updateProductById
 );
 
