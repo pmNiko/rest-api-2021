@@ -115,8 +115,8 @@ Con esto vamos a realizar algunos cambios en nuestro controlador de products
 
 De esta manera ya estamos manejando las distintas respuestas de nuestro server.
 
-Antes de continuar a refactorizar vamos a manejar el caso de que nos envien un rol 
-que no se encuentra en la bd al registrarse.
+Antes de continuar vamos a manejar el caso de que nos envien un rol 
+que no se encuentra en la bd al registrarse. auth.controller.js signup
 
   ......
     // comprobación de roles

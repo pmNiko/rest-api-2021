@@ -1,0 +1,63 @@
+************* Encriptación asimetrica ***********
+
+https://www.gb-advisors.com/es/encriptacion-simetrica-y-asimetrica-conoce-sus-diferencias/#:~:text=Los%20algoritmos%20de%20encriptaci%C3%B3n%20sim%C3%A9trica,y%20otra%20distinta%20para%20desencriptarlos.
+
+Hasta ahora hemos usado una encriptación simetrica, es decir encriptamos y desencriptamos con la misma clave
+el token del usuario, pero esto no es del todo seguro. Para esto vamos a generar una clave publica y otra privada 
+para enciptar con la privada y desencriptar con la publica.
+
+Podemos utilizar cualquier generador de claves RSA como https://travistidwell.com/jsencrypt/demo/
+
+Ahora creamos una carpeta keys y dentro dos archivos uno private.pem y otro public.pem
+y dentro pegamos las claves generadas. 
+
+Vamos a crear el archivo token.js en libs el cual vamos a utilizar tanto en el controller como el middle 
+de verificación. 
+
+Dentro vamos a crear la funcion de creacion y otra de verificacion de firma.
+
+  /*
+    fn para generar y verificar la firma del token
+  */
+  import jwt from "jsonwebtoken";
+  import fs from "fs";
+
+  // import private and public key
+  const privateKey = fs.readFileSync("../keys/private.pem");
+  const publicKey = fs.readFileSync("../keys/public.pem");
+
+  // token create
+  export const sing = (payload) => {
+    return jwt.sign(payload, privateKey, { expiresIn: "6h" });
+  };
+
+  // verify token
+  export const verify = (token) => {
+    return jwt.verify(token, publicKey);
+  };
+
+Ahora quedaria importar nuestra fn y simplemente utilizar sus metodos
+en auth.controller.js
+Importamos como: 
+  import * as tokenJwt from "../libs/token";
+
+
+Ahora cambiamos en singup y singin esto: 
+  // creación del token
+  // const token = jwt.sign({ id: savedUser._id }, config.SECRET, {
+  //   expiresIn: 86400,
+  // });
+
+Por esto:
+  const token = tokenJwt.sing({ id: savedUser._id });
+
+Y en el middle de authorization cambiamos: 
+  // verifica la veracidad del token
+    const decoded = jwt.verify(token, config.SECRET);
+
+Por esto: 
+  // verifica la veracidad del token
+    const decoded = tokenJwt.verify(token);
+
+    Dejar
+
