@@ -10,6 +10,6 @@ router.post(
   [validator.signUp, duplicate, checkRoles],
   authCtrl.singup
 );
-router.post("/signin", validator.signIn, authCtrl.singin);
+router.post("/signin", validator.signIn, authCtrl.signin);
 
 export default router;

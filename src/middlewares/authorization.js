@@ -1,8 +1,7 @@
 /*
   Validación de token y rol asignado
 */
-import config from "../server/config";
-import jwt from "jsonwebtoken";
+import * as tokenJwt from "../libs/token";
 import User from "../models/User";
 import Role from "../models/Role";
 
@@ -15,7 +14,7 @@ export const verifyToken = async (req, res, next) => {
 
   try {
     // verifica la veracidad del token
-    const decoded = jwt.verify(token, config.SECRET);
+    const decoded = tokenJwt.verify(token);
     req.userId = decoded.id;
     next();
   } catch (error) {

@@ -3,9 +3,8 @@
 */
 
 import User from "../models/User";
-import jwt from "jsonwebtoken";
-import config from "../server/config";
 import Role from "../models/Role";
+import * as tokenJwt from "../libs/token";
 
 // fn para dar de alta un usuario
 export const singup = async (req, res) => {
@@ -35,15 +34,13 @@ export const singup = async (req, res) => {
   const savedUser = await user.save();
 
   // creación del token
-  const token = jwt.sign({ id: savedUser._id }, config.SECRET, {
-    expiresIn: 86400,
-  });
+  const token = tokenJwt.sign({ id: savedUser._id });
 
   res.status(200).json({ token });
 };
 
 // fn para login de user
-export const singin = async (req, res) => {
+export const signin = async (req, res) => {
   // busqueda del user por email
   const userFound = await User.findOne({ email: req.body.email }).populate(
     "roles"
@@ -62,9 +59,7 @@ export const singin = async (req, res) => {
     return res.status(401).json({ token: null, message: "Invalid password" });
 
   // creación del token
-  const token = jwt.sign({ id: userFound._id }, config.SECRET, {
-    expiresIn: 86400,
-  });
+  const token = tokenJwt.sign({ id: userFound._id });
 
   res.json({ token });
 };
