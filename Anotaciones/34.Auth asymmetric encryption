@@ -4,7 +4,7 @@ https://www.gb-advisors.com/es/encriptacion-simetrica-y-asimetrica-conoce-sus-di
 
 Hasta ahora hemos usado una encriptación simetrica, es decir encriptamos y desencriptamos con la misma clave
 el token del usuario, pero esto no es del todo seguro. Para esto vamos a generar una clave publica y otra privada 
-para enciptar con la privada y desencriptar con la publica.
+para enciptar con la privada y desencriptar con la publica. Las  claves generadas estan enlazadas matematicamente.
 
 Podemos utilizar cualquier generador de claves RSA como https://travistidwell.com/jsencrypt/demo/
 
@@ -15,31 +15,29 @@ Vamos a crear el archivo token.js en libs el cual vamos a utilizar tanto en el c
 de verificación. 
 
 Dentro vamos a crear la funcion de creacion y otra de verificacion de firma.
+    /*
+      fn para generar y verificar la firma del token
+    */
+    import jwt from "jsonwebtoken";
+    import path from "path";
+    import fs from "fs";
 
-  /*
-    fn para generar y verificar la firma del token
-  */
-  import jwt from "jsonwebtoken";
-  import fs from "fs";
+    // import private and public key
+    const publicKey = fs.readFileSync(path.join(__dirname, "../keys/public.pem"));
+    const privateKey = fs.readFileSync(path.join(__dirname, "../keys/private.pem"));
+    const options = { expiresIn: "6h", algorithm: "RS256" };
 
-  // import private and public key
-  const privateKey = fs.readFileSync("../keys/private.pem");
-  const publicKey = fs.readFileSync("../keys/public.pem");
+    // create token with private key
+    export const sign = (payload) => jwt.sign(payload, privateKey, options);
 
-  // token create
-  export const sing = (payload) => {
-    return jwt.sign(payload, privateKey, { expiresIn: "6h" });
-  };
+    // verify token with public key
+    export const verify = (token) => jwt.verify(token, publicKey);
 
-  // verify token
-  export const verify = (token) => {
-    return jwt.verify(token, publicKey);
-  };
 
 Ahora quedaria importar nuestra fn y simplemente utilizar sus metodos
 en auth.controller.js
 Importamos como: 
-  import * as tokenJwt from "../libs/token";
+  import * as token from "../libs/token";
 
 
 Ahora cambiamos en singup y singin esto: 
@@ -49,7 +47,11 @@ Ahora cambiamos en singup y singin esto:
   // });
 
 Por esto:
-  const token = tokenJwt.sing({ id: savedUser._id });
+  //creacion del token
+  const tokenJwt = token.sing({ id: savedUser._id });
+
+  // creación del token
+  const tokenJwt = token.sign({ id: userFound._id });
 
 Y en el middle de authorization cambiamos: 
   // verifica la veracidad del token
@@ -57,7 +59,6 @@ Y en el middle de authorization cambiamos:
 
 Por esto: 
   // verifica la veracidad del token
-    const decoded = tokenJwt.verify(token);
+    const decoded = token.verify(token);
 
-    Dejar
 

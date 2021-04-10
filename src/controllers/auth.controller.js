@@ -4,7 +4,7 @@
 
 import User from "../models/User";
 import Role from "../models/Role";
-import * as tokenJwt from "../libs/token";
+import * as token from "../libs/token";
 
 // fn para dar de alta un usuario
 export const singup = async (req, res) => {
@@ -34,9 +34,9 @@ export const singup = async (req, res) => {
   const savedUser = await user.save();
 
   // creación del token
-  const token = tokenJwt.sign({ id: savedUser._id });
+  const tokenJwt = token.sign({ id: savedUser._id });
 
-  res.status(200).json({ token });
+  res.status(200).json({ tokenJwt });
 };
 
 // fn para login de user
@@ -59,7 +59,7 @@ export const signin = async (req, res) => {
     return res.status(401).json({ token: null, message: "Invalid password" });
 
   // creación del token
-  const token = tokenJwt.sign({ id: userFound._id });
+  const tokenJwt = token.sign({ id: userFound._id });
 
-  res.json({ token });
+  res.json({ tokenJwt });
 };

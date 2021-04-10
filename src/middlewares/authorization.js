@@ -1,20 +1,20 @@
 /*
   Validación de token y rol asignado
 */
-import * as tokenJwt from "../libs/token";
+import * as token from "../libs/token";
 import User from "../models/User";
 import Role from "../models/Role";
 
 // Middleware encargado de verificar el token del user
 export const verifyToken = async (req, res, next) => {
-  const token = req.headers["x-access-token"];
+  const tokenJwt = req.headers["x-access-token"];
 
   // si el token no es enviado corta la ejecución
-  if (!token) return res.status(403).json({ message: "No token provided." });
+  if (!tokenJwt) return res.status(403).json({ message: "No token provided." });
 
   try {
     // verifica la veracidad del token
-    const decoded = tokenJwt.verify(token);
+    const decoded = token.verify(tokenJwt);
     req.userId = decoded.id;
     next();
   } catch (error) {
