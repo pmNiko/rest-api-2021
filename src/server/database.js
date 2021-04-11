@@ -10,9 +10,9 @@ const { DB_HOST, DB_PORT, DB_DATABASE, DB_DATABASE_TEST } = result.parsed;
 
 let environment = `${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
 
-if (NODE_ENV === "prod") {
-  environment = `${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
-}
+// if (NODE_ENV === "prod") {
+//   environment = `${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
+// }
 
 if (NODE_ENV === "test") {
   environment = `${DB_HOST}:${DB_PORT}/${DB_DATABASE_TEST}`;
