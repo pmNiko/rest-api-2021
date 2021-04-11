@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=dev nodemon src/server/index.js --exec babel-node",
-    "build": "babel src/ --out-dir dist",
+    "build": "babel src/ --out-dir dist && cp -R ./src/keys ./dist/keys/",
+    "build-dev": "cp .env ./dist/.env",
     "start": "NODE_ENV=prod node dist/server/index.js"
   },
   "keywords": [],
