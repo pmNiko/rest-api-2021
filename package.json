@@ -4,14 +4,15 @@
   "description": "API de testing",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/server/index.js --exec babel-node",
-    "build": "babel src --out-dir dist",
-    "start": "node dist/server/index.js"
+    "dev": "NODE_ENV=dev nodemon src/server/index.js --exec babel-node",
+    "build": "babel src/ --out-dir dist",
+    "start": "NODE_ENV=prod node dist/server/index.js"
   },
   "keywords": [],
   "author": "Nikolas",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
