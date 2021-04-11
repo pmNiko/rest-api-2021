@@ -9,8 +9,6 @@ const result = dotenv.config();
 const {
   DB_HOST,
   DB_PORT,
-  DB_USER,
-  DB_PASSWORD,
   DB_DATABASE,
   DB_DATABASE_DEV,
   DB_DATABASE_TEST,
@@ -21,13 +19,15 @@ let environment = "";
 
 switch (NODE_ENV) {
   case "prod":
-    environment = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@productsecommerce.sdan2.mongodb.net/${DB_DATABASE}?retryWrites=true&w=majority`;
+    environment = `${DB_DATABASE}`;
     break;
   case "dev":
     environment = `${url}${DB_DATABASE_DEV}`;
     break;
-  default:
+  case "test":
     environment = `${url}${DB_DATABASE_TEST}`;
+    break;
+  default:
     break;
 }
 

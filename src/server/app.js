@@ -4,13 +4,11 @@
 import express from "express";
 import morgan from "morgan"; //log por consola
 import pkg from "../../package.json"; //datos del package.json
-import { createRoles } from "../libs/initialSetup";
 import productsRoutes from "../routes/products.routes";
 import authRoutes from "../routes/auth.routes";
 import usersRoutes from "../routes/users.routes";
 
 const app = express(); //creación del server
-createRoles(); //creación inicial de roles
 
 app.use(express.json()); //admite los objetos json que recibe
 

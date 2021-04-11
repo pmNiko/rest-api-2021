@@ -10,14 +10,26 @@ conectar con tu app
 mongodb+srv://dbadmin:6rVLAVW0LbRqVkvS@productsecommerce.sdan2.mongodb.net/apiRestProducts?retryWrites=true&w=majority
 
 Conectamos SRV en robo 3t. Podemos hacer un test para comprobar que se conecta. 
+
+Cambiemos el .env 
+  SERVER_PORT=4000
+  DB_HOST = "mongodb://localhost"
+  DB_PORT = 27017
+  DB_DATABASE = "mongodb+srv://dbadmin:6rVLAVW0LbRqVkvS@productsecommerce.sdan2.mongodb.net/apiRestProducts?retryWrites=true&w=majority"
+  DB_DATABASE_DEV = "apiRestProductsDev"
+  DB_DATABASE_TEST = "apiRestProductsTest"
+  DB_USER = "dbadmin"
+  DB_PASSWORD = "6rVLAVW0LbRqVkvS"
+
 Y luego vamos a cambiar nuestro archivo database.js 
+  import mongoose from "mongoose";
+  import dotenv from "dotenv";
+
   const { NODE_ENV } = process.env;
   const result = dotenv.config();
   const {
     DB_HOST,
     DB_PORT,
-    DB_USER,
-    DB_PASSWORD,
     DB_DATABASE,
     DB_DATABASE_DEV,
     DB_DATABASE_TEST,
@@ -28,14 +40,28 @@ Y luego vamos a cambiar nuestro archivo database.js
 
   switch (NODE_ENV) {
     case "prod":
-      environment = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@productsecommerce.sdan2.mongodb.net/${DB_DATABASE}?retryWrites=true&w=majority`;
+      environment = `${DB_DATABASE}`;
       break;
     case "dev":
       environment = `${url}${DB_DATABASE_DEV}`;
       break;
-    default:
+    case "test":
       environment = `${url}${DB_DATABASE_TEST}`;
       break;
+    default:
+      break;
+  }
+
+  export async function connect() {
+    await mongoose
+      .connect(`${environment}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: true,
+        useCreateIndex: true,
+      })
+      .then((db) => console.log(`>>>> Database is connected on ${environment} 🗂`))
+      .catch((err) => console.log(">>> Error: ", err));
   }
 
 Bien ahora podemos correr npm run dev para comprobar que nuestro entorno de 
