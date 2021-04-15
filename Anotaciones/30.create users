@@ -68,7 +68,7 @@ Cambiemos el modelo de user.
     },
 
 Volvamos a probar. Recibimos un 500 como respuesta puesto que el modelo 
-requiere el username y email para instanciarse. Para esto vamos a crear un schema de 
+requiere el username e email para instanciarse. Para esto vamos a crear un schema de 
 validación y un middle para proteger la ruta. 
 
 Schema/userSchema.js 
@@ -170,3 +170,5 @@ Por ultimo listemos los users, comencemos por el controller de users
     router.get("/", [verifyToken, isAdmin], userCtrl.getUsers);
 
   Perfecto!!!!
+
+  Llegamos hasta aca

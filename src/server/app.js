@@ -7,6 +7,7 @@ import pkg from "../../package.json"; //datos del package.json
 import productsRoutes from "../routes/products.routes";
 import authRoutes from "../routes/auth.routes";
 import usersRoutes from "../routes/users.routes";
+import rolesRoutes from "../routes/roles.routes";
 
 const app = express(); //creación del server
 
@@ -28,9 +29,11 @@ app.get("/", (req, res) => {
   });
 });
 
+// app.get("/products", productsCtrl.getProducts);
 // Middleware para setear la url del end point
 app.use("/api/products", productsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/roles", rolesRoutes);
 
 export default app;

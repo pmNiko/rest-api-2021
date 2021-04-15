@@ -6,11 +6,12 @@ Creamos en la raiz del proyecto .env y lo agregamos al .gitignore
     SERVER_PORT=4000
     DB_HOST = "mongodb://localhost"
     DB_PORT = 27017
-    DB_DATABASE = "apiRestProducts"
+    DB_DATABASE = "mongodb+srv://dbadmin:6rVLAVW0LbRqVkvS@productsecommerce.sdan2.mongodb.net/apiRestProducts?retryWrites=true&w=majority"
     DB_DATABASE_DEV = "apiRestProductsDev"
     DB_DATABASE_TEST = "apiRestProductsTest"
-    DB_USER = ""
-    DB_PASSWORD = ""
+    DB_USER = "dbadmin"
+    DB_PASSWORD = "6rVLAVW0LbRqVkvS"
+
 
   Ahora las utilizamos en index y en database.js
     import dotenv from "dotenv";
@@ -26,24 +27,33 @@ Creamos en la raiz del proyecto .env y lo agregamos al .gitignore
     console.log(`>>>> Server run on port ${SERVER_PORT} 🖥`);
 
   database.js
+    import mongoose from "mongoose";
     import dotenv from "dotenv";
 
     const { NODE_ENV } = process.env;
     const result = dotenv.config();
-    const { DB_HOST, DB_PORT, DB_DATABASE, DB_DATABASE_DEV, DB_DATABASE_TEST} = result.parsed;
+    const {
+      DB_HOST,
+      DB_PORT,
+      DB_DATABASE,
+      DB_DATABASE_DEV,
+      DB_DATABASE_TEST,
+    } = result.parsed;
 
     const url = `${DB_HOST}:${DB_PORT}/`;
     let environment = "";
 
     switch (NODE_ENV) {
-      case "prod":
-        environment = `${url}${DB_DATABASE}`;
+      case "production":
+        environment = `${DB_DATABASE}`;
         break;
-      case "dev":
+      case "development":
         environment = `${url}${DB_DATABASE_DEV}`;
         break;
-      default:
+      case "test":
         environment = `${url}${DB_DATABASE_TEST}`;
+        break;
+      default:
         break;
     }
 
@@ -58,6 +68,7 @@ Creamos en la raiz del proyecto .env y lo agregamos al .gitignore
         .then((db) => console.log(`>>>> Database is connected on ${environment} 🗂`))
         .catch((err) => console.log(">>> Error: ", err));
     }
+
 
   Ahora el package.json 
     "scripts": {

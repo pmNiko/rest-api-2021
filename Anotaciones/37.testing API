@@ -12,20 +12,21 @@ Dentro del package.json vamos a realizar una configuración inicial
 
 Quedando asi: 
       "scripts": {
-        "dev": "NODE_ENV=dev nodemon src/server/index.js --exec babel-node",
+        "dev": "NODE_ENV=development nodemon src/server/index.js --exec babel-node",
         "build": "babel src/ --out-dir dist && cp -R ./src/keys ./dist/keys/",
         "build-dev": "cp .env ./dist/.env",
-        "start": "NODE_ENV=prod node dist/server/index.js",
-        "test": "NODE_ENV=test jest --detectOpenHandles"
+        "start": "NODE_ENV=production node dist/server/index.js",
+        "test": "NODE_ENV=test jest --verbose  --detectOpenHandles",
+        "test:watch": "npm run test -- --watch"
       },
-      "keywords": [],
-      "author": "Nikolas",
-      "license": "ISC",
-      "jest": {
-        "testEnvironment": "node",
-        "coveragePathIgnorePatterns": [
-          "/node_modules/"
-        ]
+        "keywords": [],
+        "author": "Nikolas",
+        "license": "ISC",
+        "jest": {
+          "testEnvironment": "node",
+          "coveragePathIgnorePatterns": [
+            "/node_modules/"
+          ]
       },
 
 Antes de continuar vamos a transladar la fn de createRoles al index. 
@@ -77,7 +78,7 @@ Por ultimo cambiamos el initialSetup.js
       const roles = await Role.estimatedDocumentCount();
 
       //Si no existen roles crea roles por defecto
-      if (!roles) {
+      if (!roles && process.env.NODE_ENV != "test") {
         // Generamos una promesa multiple para ganar rendimiento
         const values = await Promise.all([
           new Role({ name: "user" }).save(),
@@ -93,7 +94,7 @@ Por ultimo cambiamos el initialSetup.js
   };
 
 
-Ahora si creamos una carpeta __test__ y dentro un sample.test.js
+Ahora si creamos una carpeta test y dentro un sample.test.js
   import app from "../server/app.js";
 
   describe("Sample Test", () => {
@@ -106,4 +107,29 @@ Eliminamos la bd de desarrollo y eliminamos los documentos de la coleccion de ro
 de produccion mediante robo 3t. 
 Probamos los test entornos de desarrollo. 
 
+***** Comencemos por testear el end point de roles ***** 
 
+  Vamos hacerlo al estilo TDD comencemos creando los test, esperemos que fallen 
+  y por ultimo creamos la logica para poder pasar esos test. 
+
+ el index.js de nuestro server debe estar asi 
+
+  import dotenv from "dotenv";
+  import { createRoles } from "../libs/initialSetup";
+  import app from "./app";
+  import { connect } from "./database";
+
+  createRoles(); //creación inicial de roles
+
+  const { NODE_ENV } = process.env;
+
+  const config = dotenv.config();
+  const { SERVER_PORT } = config.parsed;
+  connect(); //conexión database
+
+  const server = app.listen(SERVER_PORT); //server run on port 3002
+
+  // console.log(`>>>> Environment: ${NODE_ENV}🎫 <<<<`);
+  // console.log(`>>>> Server run on port ${SERVER_PORT} 🖥`);
+
+  export { app, server };

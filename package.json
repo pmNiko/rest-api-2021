@@ -4,11 +4,12 @@
   "description": "API de testing",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev nodemon src/server/index.js --exec babel-node",
+    "dev": "NODE_ENV=development nodemon src/server/index.js --exec babel-node",
     "build": "babel src/ --out-dir dist && cp -R ./src/keys ./dist/keys/",
     "build-dev": "cp .env ./dist/.env",
-    "start": "NODE_ENV=prod node dist/server/index.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles"
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "test": "NODE_ENV=test jest --verbose  --detectOpenHandles",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
   "author": "Nikolas",

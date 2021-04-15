@@ -1,0 +1,11 @@
+********** Testing del end point roles ******
+
+ creamos el archivo tests/roles_routes.test.js y una carpeta helpers
+ dentro un archivo roles_helpers.js 
+
+ ver archivos... 
+
+ Bien una vez testeada nuestra ruta de roles continuamos por los usuarios. 
+
+ tests/auth_routes.test.js
+ 

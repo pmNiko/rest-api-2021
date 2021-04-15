@@ -7,7 +7,7 @@ filtrar nuestras busquedas.
   en la url luego de nuestro endPoint vamos a colocar un signo "?" 
   seguido el nombre de nuestro param  "=" y seguido el valor 
 
-  En en controller lo recuperamos a travez de req.query.<param>
+  En el controller lo recuperamos a travez de req.query.<param>
 
   Antes de pasar a nuestra accion getProducts vamos a crear una fn 
   modular para poderla reutilizar. 

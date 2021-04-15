@@ -18,10 +18,10 @@ const url = `${DB_HOST}:${DB_PORT}/`;
 let environment = "";
 
 switch (NODE_ENV) {
-  case "prod":
+  case "production":
     environment = `${DB_DATABASE}`;
     break;
-  case "dev":
+  case "development":
     environment = `${url}${DB_DATABASE_DEV}`;
     break;
   case "test":
