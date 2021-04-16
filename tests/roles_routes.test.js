@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 import { server } from "../src/server/index";
-import Role from "../src/models/Role";
-import { api, initialRoles, getRoles } from "./helpers/roles_helpers";
+import {
+  api,
+  initialRoles,
+  getRoles,
+  cleanRoles,
+} from "./helpers/roles_helpers";
 
 beforeAll(async () => {
-  await Role.deleteMany({}); //vacio la coleccion
+  await cleanRoles(); //vacio la coleccion
 });
 
 describe("GET of api roles", () => {
@@ -44,7 +48,8 @@ describe("Creation of default roles", () => {
   });
 });
 
-afterAll(() => {
+afterAll(async () => {
+  await cleanRoles();
   server.close();
   mongoose.connection.close();
 });

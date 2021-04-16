@@ -21,8 +21,14 @@ export const initialRoles = async () => {
   }
 };
 
+// devuelve el rol segun el indice que recibe como parametro o el array completo
 export const getRoles = async (index) => {
   const response = await api.get("/api/roles");
   const data = response.body.data;
   return index != undefined ? data[index] : data;
+};
+
+// vaciar la coleccion de roles
+export const cleanRoles = async () => {
+  await Role.deleteMany({});
 };
