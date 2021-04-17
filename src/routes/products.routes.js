@@ -11,15 +11,15 @@ const router = Router();
 // End Point para crear
 router.post(
   "/",
-  [verifyToken, isModerator, schema.create],
+  [verifyToken, isAdmin, schema.create],
   productsCtrl.createProduct
 );
 
 // End Point para generar datos falsos
-router.get("/generate", productsCtrl.generate);
+router.get("/data-fake", productsCtrl.generateDataFake);
 
 // End Point para obtener productos por página
-router.get("/page", productsCtrl.getProductsPerPage);
+router.get("/page/:number?", productsCtrl.getProductsPerPage);
 
 // End Point para obtener un producto por ID
 router.get("/:id", productsCtrl.getProductById);
@@ -35,7 +35,7 @@ router.put(
 );
 
 // End Point para eliminar todos los productos
-router.delete("/fake-data", productsCtrl.deleteAll);
+router.delete("/delete-data-fake", productsCtrl.deleteDataFake);
 
 // End Point para eliminar por ID
 router.delete("/:id", [verifyToken, isAdmin], productsCtrl.deleteProductById);

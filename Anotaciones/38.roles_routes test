@@ -8,4 +8,12 @@
  Bien una vez testeada nuestra ruta de roles continuamos por los usuarios. 
 
  tests/auth_routes.test.js
+
+ Antes de pasar a testear users deberiamos agregar al app.js 
+ app.use(express.urlencoded({ extended: false }));
+
+ para reconocer objetos de una solicitud entrante por post o put 
+ desde una app. 
+
+
  

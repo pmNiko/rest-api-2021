@@ -64,5 +64,3 @@ la duplicación de username o email, ademas de checkear los roles
   router.post("/signup",[duplicate, checkRoles],validator.signUp,authCtrl.singup);
 
 Con esto ya manejamos el error de duplicación y/o inexistencia de roles.
-
-Llegamos hasta aca

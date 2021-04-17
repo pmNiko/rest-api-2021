@@ -169,6 +169,6 @@ Por ultimo listemos los users, comencemos por el controller de users
   Por ultimo la ruta de getUsers() 
     router.get("/", [verifyToken, isAdmin], userCtrl.getUsers);
 
-  Perfecto!!!!
 
-  Llegamos hasta aca
+
+ 

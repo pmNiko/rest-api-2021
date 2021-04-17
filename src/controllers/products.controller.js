@@ -3,7 +3,6 @@
 */
 import Product from "../models/Product";
 import faker from "faker";
-import { json } from "express";
 faker.locale = "es";
 
 // fn para crear producto
@@ -18,49 +17,53 @@ export const createProduct = async (req, res) => {
 };
 
 // fn para generar datos falsos a travez de faker
-export const generate = (req, res) => {
-  let categories = [
-    "Electronica",
-    "Audio",
-    "Telefonia",
-    "Juegos",
-    "Computacion",
+export const generateDataFake = async (req, res) => {
+  const categories = [
+    "categoria1",
+    "categoria2",
+    "categoria3",
+    "categoria4",
+    "categoria5",
   ];
 
-  let products = [];
-
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 50; i++) {
     const product = new Product();
+
+    product.dataFake = true;
+    product.name = faker.commerce.product();
     product.category =
       categories[Math.floor(Math.random() * categories.length)];
-    product.name = faker.commerce.productName();
-    product.price = faker.commerce.price();
+    product.price = faker.finance.amount();
     product.imgURL = faker.image.technics();
-
     try {
-      const productSaved = product.save();
-      products.push(productSaved);
+      await product.save();
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ message: "Error fake data save." });
     }
   }
-
-  res.json({ data: products });
+  res.status(201).json({ message: "Data fake insert" });
 };
 
-// fn para vaciar la colleccion de products
-export const deleteAll = (req, res) => {
-  Product.deleteMany({}, (error, products) => resServer(res, error, products));
+// delete data fake
+export const deleteDataFake = (req, res) => {
+  Product.deleteMany({ dataFake: true }, (error, products) => {
+    resServer(res, error, products);
+  });
 };
 
-// fn para obtener los productos por pagina
+// get products per page
 export const getProductsPerPage = async (req, res) => {
-  let { limit, page } = req.query; // received limits for query strings
-  limit = parseInt(limit) || 10; // if limits is null
-  page = parseInt(page) || 1; // if page is null
-  const skip = limit * page - limit; //example 2 * 1 = 2 ; 2-2= 0; in the first page the value of the skip is 0
-  search({ skip, limit, res });
+  let { category, limit } = req.query;
+
+  const conditions = category && { category };
+
+  const page = parseInt(req.params.number) || 0;
+
+  limit = limit && limit > 0 ? parseInt(limit) : 0;
+
+  const skip = page > 0 ? limit * page - limit : 0; //example 2 * 1 = 2 ; 2-2= 0; // in the first page the value of the skip is 0
+
+  search({ conditions, skip, limit, res });
 };
 
 // fn para obtener producto por ID

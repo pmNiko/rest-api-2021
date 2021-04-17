@@ -11,6 +11,8 @@ import rolesRoutes from "../routes/roles.routes";
 
 const app = express(); //creación del server
 
+app.use(express.urlencoded({ extended: false })); //para solicitud de obj entrantes
+
 app.use(express.json()); //admite los objetos json que recibe
 
 app.use(morgan("dev")); //middleware propio de express

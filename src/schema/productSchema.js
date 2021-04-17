@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 // const validation schema
-const nameAndCategory = Joi.string().min(4).max(13);
+const nameAndCategory = Joi.string().min(4).max(18);
 const price = Joi.number().positive().precision(2);
 const imgURL = Joi.string().min(13);
 
