@@ -1,19 +1,25 @@
 ********** Testing del end point roles ******
 
  creamos el archivo tests/roles_routes.test.js y una carpeta helpers
- dentro un archivo roles_helpers.js 
+ dentro un archivo 
+    
+      roles_helpers.js 
 
  ver archivos... 
 
  Bien una vez testeada nuestra ruta de roles continuamos por los usuarios. 
 
- tests/auth_routes.test.js
+      tests/auth_routes.test.js
+
+     Testeamos por consola 
+               npm run test:watch -o auth_routes.test.js
 
  Antes de pasar a testear users deberiamos agregar al app.js 
  app.use(express.urlencoded({ extended: false }));
 
  para reconocer objetos de una solicitud entrante por post o put 
  desde una app. 
+     
 
 
  

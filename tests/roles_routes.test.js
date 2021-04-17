@@ -11,7 +11,7 @@ beforeAll(async () => {
   await cleanRoles(); //vacio la coleccion
 });
 
-describe("GET of api roles", () => {
+describe("GET end point /api/roles", () => {
   test("Expect return status 200 get /api/roles", async () => {
     await api
       .get("/api/roles")
