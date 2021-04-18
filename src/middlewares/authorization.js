@@ -46,5 +46,5 @@ async function verifyRole(role, req, res, next) {
     }
   }
 
-  res.status(403).json({ message: `Require role ${role}` });
+  res.status(403).json({ message: `Require ${role} role.` });
 }

@@ -20,6 +20,10 @@
  para reconocer objetos de una solicitud entrante por post o put 
  desde una app. 
      
+Ahora vamos a testear user_routes
+
+     user_routes.test.js
+
 
 
  
