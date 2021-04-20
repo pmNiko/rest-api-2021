@@ -100,6 +100,7 @@ describe("Login User POST end point /api/signin", () => {
 });
 
 afterAll(async () => {
+  await User.deleteMany({});
   await cleanRoles();
   server.close();
   mongoose.connection.close();

@@ -25,10 +25,9 @@ describe("Creation of default roles", () => {
     let roles = await getRoles();
     expect(roles).toHaveLength(0);
 
-    initialRoles();
+    await initialRoles();
     const rolesInsert = await getRoles();
 
-    expect(rolesInsert).toHaveLength(roles.length + 3);
     expect(rolesInsert).toHaveLength(3);
   });
 

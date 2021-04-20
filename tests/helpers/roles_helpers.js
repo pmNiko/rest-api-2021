@@ -24,8 +24,7 @@ export const initialRoles = async () => {
 // devuelve el rol segun el indice que recibe como parametro o el array completo
 export const getRoles = async (index) => {
   const response = await api.get("/api/roles");
-  const data = response.body.data;
-  return index != undefined ? data[index] : data;
+  return index != undefined ? response.body.data[index] : response.body.data;
 };
 
 // vaciar la coleccion de roles

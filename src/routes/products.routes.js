@@ -15,8 +15,8 @@ router.post(
   productsCtrl.createProduct
 );
 
-// End Point para generar datos falsos
-router.get("/data-fake", productsCtrl.generateDataFake);
+// End Point para generar datos falsos "Protected"
+router.get("/data-fake", [verifyToken, isAdmin], productsCtrl.generateDataFake);
 
 // End Point para obtener productos por página
 router.get("/page/:number?", productsCtrl.getProductsPerPage);
@@ -27,17 +27,21 @@ router.get("/:id", productsCtrl.getProductById);
 // End Point para obtener todos
 router.get("/", productsCtrl.getProducts);
 
-// End Point para actualizar por ID
+// End Point para actualizar por ID "Protected"
 router.put(
   "/:id",
-  [verifyToken, isModerator, schema.update],
+  [verifyToken, isAdmin, schema.update],
   productsCtrl.updateProductById
 );
 
-// End Point para eliminar todos los productos
-router.delete("/delete-data-fake", productsCtrl.deleteDataFake);
+// End Point para eliminar todos los productos "Protected"
+router.delete(
+  "/delete-data-fake",
+  [verifyToken, isAdmin],
+  productsCtrl.deleteDataFake
+);
 
-// End Point para eliminar por ID
+// End Point para eliminar por ID "Protected"
 router.delete("/:id", [verifyToken, isAdmin], productsCtrl.deleteProductById);
 
 export default router;
