@@ -109,9 +109,6 @@ Probamos los test entornos de desarrollo.
 
 ***** Comencemos por testear el end point de roles ***** 
 
-  Vamos hacerlo al estilo TDD comencemos creando los test, esperemos que fallen 
-  y por ultimo creamos la logica para poder pasar esos test. 
-
  el index.js de nuestro server debe estar asi 
 
   import dotenv from "dotenv";

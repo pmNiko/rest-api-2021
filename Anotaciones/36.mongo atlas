@@ -65,7 +65,7 @@ Y luego vamos a cambiar nuestro archivo database.js
   }
 
 Bien ahora podemos correr npm run dev para comprobar que nuestro entorno de 
-desarrollo sigue sfuncionando ok. 
+desarrollo sigue funcionando ok. 
 Y por ultimo hagamos un build y probemos correr el entorno de produccion. Al 
 refrescar robo 3t tendremos la base de datos con datos dentro.
 
